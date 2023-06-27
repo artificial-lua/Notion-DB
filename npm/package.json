@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/artificial-lua/Notion-DB#readme",
   "dependencies": {
+    "@types/axios": "^0.14.0",
     "typescript": "^5.0.4"
   }
 }

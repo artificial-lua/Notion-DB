@@ -54,13 +54,13 @@ enum numberFormat {
     zloty = 'zloty'
 }
 
-export interface NotionDatabasePropertyType {
+export interface NotionDatabaseBasePropertyType {
     id: string;
     name: string;
     type: string;
 }
 
-interface SelectOption extends NotionDatabasePropertyType {
+interface SelectOption extends NotionDatabaseBasePropertyType {
     color: optionColors;
 }
 
@@ -70,80 +70,80 @@ interface SelectOptionGroup extends SelectOption {
 
 //
 
-export interface Checkbox extends NotionDatabasePropertyType {
+export interface Checkbox extends NotionDatabaseBasePropertyType {
     type: 'checkbox';
     checkbox: {};
 }
 
-export interface CreatedBy extends NotionDatabasePropertyType {
+export interface CreatedBy extends NotionDatabaseBasePropertyType {
     type: 'created_by';
     created_by: {};
 }
 
-export interface CreatedTime extends NotionDatabasePropertyType {
+export interface CreatedTime extends NotionDatabaseBasePropertyType {
     type: 'created_time';
     created_time: {};
 }
 
-export interface Date extends NotionDatabasePropertyType {
+export interface Date extends NotionDatabaseBasePropertyType {
     type: 'date';
     date: {};
 }
 
-export interface Email extends NotionDatabasePropertyType {
+export interface Email extends NotionDatabaseBasePropertyType {
     type: 'email';
     email: {};
 
 }
 
 /** 📘 The Notion API does not yet support uploading files to Notion. */
-export interface Files extends NotionDatabasePropertyType {
+export interface Files extends NotionDatabaseBasePropertyType {
     type: 'files';
     files: {};
 }
 
-export interface Formula extends NotionDatabasePropertyType {
+export interface Formula extends NotionDatabaseBasePropertyType {
     type: 'formula';
     formula: {
         expression: string;
     };
 }
 
-export interface LastEditedBy extends NotionDatabasePropertyType {
+export interface LastEditedBy extends NotionDatabaseBasePropertyType {
     type: 'last_edited_by';
     last_edited_by: {};
 }
 
-export interface LastEditedTime extends NotionDatabasePropertyType {
+export interface LastEditedTime extends NotionDatabaseBasePropertyType {
     type: 'last_edited_time';
     last_edited_time: {};
 }
 
-export interface MultiSelect extends NotionDatabasePropertyType {
+export interface MultiSelect extends NotionDatabaseBasePropertyType {
     type: 'multi_select';
     multi_select: {
         options: SelectOption[];
     };
 }
 
-export interface Number extends NotionDatabasePropertyType {
+export interface Number extends NotionDatabaseBasePropertyType {
     type: 'number';
     number: {
         format: numberFormat;
     };
 }
 
-export interface People extends NotionDatabasePropertyType {
+export interface People extends NotionDatabaseBasePropertyType {
     type: 'people';
     people: {};
 }
 
-export interface PhoneNumber extends NotionDatabasePropertyType {
+export interface PhoneNumber extends NotionDatabaseBasePropertyType {
     type: 'phone_number';
     phone_number: {};
 }
 
-export interface Relation extends NotionDatabasePropertyType {
+export interface Relation extends NotionDatabaseBasePropertyType {
     type: 'relation';
     relation: {
         database_id: string;
@@ -152,12 +152,12 @@ export interface Relation extends NotionDatabasePropertyType {
     };
 }
 
-export interface RichText extends NotionDatabasePropertyType {
+export interface RichText extends NotionDatabaseBasePropertyType {
     type: 'rich_text';
     rich_text: {};
 }
 
-export interface Rollup extends NotionDatabasePropertyType {
+export interface Rollup extends NotionDatabaseBasePropertyType {
     type: 'rollup';
     rollup: {
         relation_property_name: string;
@@ -168,7 +168,7 @@ export interface Rollup extends NotionDatabasePropertyType {
     };
 }
 
-export interface Select extends NotionDatabasePropertyType {
+export interface Select extends NotionDatabaseBasePropertyType {
     type: 'select';
     select: {
         options: SelectOption[];
@@ -180,7 +180,7 @@ export interface Select extends NotionDatabasePropertyType {
 🚧 It is not possible to update a status database property's name or options values via the API.
 Update these values from the Notion UI, instead.
 */
-export interface Status extends NotionDatabasePropertyType {
+export interface Status extends NotionDatabaseBasePropertyType {
     type: 'status';
     status: {
         options: SelectOption[];
@@ -202,14 +202,14 @@ A database title defines the title of the database and is found on the database 
 
 Every database requires both a database title and a title database property.
 */
-export interface Title extends NotionDatabasePropertyType {
+export interface Title extends NotionDatabaseBasePropertyType {
     type: 'title';
     title: {};
 }
 
-export interface Url extends NotionDatabasePropertyType {
+export interface Url extends NotionDatabaseBasePropertyType {
     type: 'url';
     url: {};
 }
 
-export default NotionDatabasePropertyType;
+export type NotionDatabasePropertyType = Checkbox | CreatedBy | CreatedTime | Date | Email | Files | Formula | LastEditedBy | LastEditedTime | MultiSelect | Number | People | PhoneNumber | Relation | RichText | Rollup | Select | Status | Title | Url;
