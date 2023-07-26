@@ -1,4 +1,7 @@
-import { NotionDatabasePropertyType } from './types';
+import {
+    NotionDatabasePropertyType,
+    SelectOption
+} from './types';
 import axios from 'axios';
 
 class NotionDatabaseConnector {
@@ -7,36 +10,77 @@ class NotionDatabaseConnector {
     response: any;
     isError: boolean = false;
     error: any = null;
-    title: string = '';
-    properties: {[key:string] : NotionDatabasePropertyType} = {};
+    title: string | null = null;
+    properties: {[key:string] : NotionDatabasePropertyType} | null = null;
 
     constructor(databaseId:string, key:string) {
         this.databaseId = databaseId;
         this.key = key;
     }
 
-    async getDatabaseInformation() {
-        
+    getDatabaseInformation() {
+        return new Promise((resolve, reject) => {
+            const obj = this
+            axios.get(
+                `https://api.notion.com/v1/databases/${obj.databaseId}`,
+                { headers: { 'Authorization': obj.key, 'Notion-Version': '2022-06-28' }}
+            ).then(response => {
+                const data = response.data;
+                obj.response = data;
+                obj.properties = data.properties;
+                
+                resolve({
+                    data: obj.response,
+                    properties: obj.properties
+                });
+            })
+            .catch(error => {
+                const err = error.response.data;
+                obj.isError = true;
+                obj.error = err;
 
-        await axios.get(
-            `https://api.notion.com/v1/databases/${this.databaseId}`,
-            { headers: { 'Authorization': this.key, 'Notion-Version': '2022-06-28' }}
-        ).then(response => {
-            const data = response.data;
-            this.response = data;
-            this.properties = data.properties;
-            
-            console.log(response.data.properties.Tags.multi_select.options)
-        })
-        .catch(error => {
-            const err = error.response.data;
-            this.isError = true;
-            this.error = err;
-
-            throw new Error(err.message);
+                reject({
+                    error: obj.error
+                });
+            });
         });
+    }
 
-        return this.response;
+    getDatabaseProperties() {
+        const obj = this
+
+        return new Promise((resolve, reject) => {
+            if (obj.properties != null) {
+                resolve(obj.properties);
+            }
+            else {
+                obj.getDatabaseInformation().then(data => {
+                    resolve(obj.properties);
+                }).catch(error => {
+                    reject(obj.error);
+                })
+            }
+        });
+    }
+
+    async getMultiSelectOptions(property: string){
+        const obj = this;
+        
+        if (obj.properties === null) {
+            await obj.getDatabaseInformation()
+        }
+
+        if (obj.properties !== null) {
+            for (const [key, value] of Object.entries(obj.properties)) {
+                if (value.type === 'multi_select' && key === property) {
+                    return value.multi_select.options;
+                }
+            }
+
+            throw new Error(`Property '${property}' not found`);
+        }
+        
+        throw new Error(`Database '${obj.databaseId}' not found`);
     }
 }
 

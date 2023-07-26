@@ -60,7 +60,7 @@ export interface NotionDatabaseBasePropertyType {
     type: string;
 }
 
-interface SelectOption extends NotionDatabaseBasePropertyType {
+export interface SelectOption extends NotionDatabaseBasePropertyType {
     color: optionColors;
 }
 
